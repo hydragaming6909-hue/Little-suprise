@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Little Surprise</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+*{box-sizing:border-box}
+body{
+margin:0;
+font-family:'Poppins',sans-serif;
+background:linear-gradient(135deg,#ffd1dc,#ffe6f0);
+transition:background 1s;
+color:#333;
+overflow:hidden;
+}
+.page{
+display:none;
+min-height:100vh;
+padding:30px 16px;
+text-align:center;
+}
+.active{display:block}
+
+.card-box{
+background:#fff;
+border-radius:20px;
+padding:22px;
+box-shadow:0 15px 40px rgba(0,0,0,.15);
+max-width:330px;
+margin:40px auto;
+}
+
+.heart{
+font-size:70px;
+animation:beat 1.2s infinite;
+}
+@keyframes beat{
+0%,100%{transform:scale(1)}
+50%{transform:scale(1.2)}
+}
+
+.tap-btn{
+margin-top:20px;
+padding:12px 30px;
+border-radius:30px;
+background:#ff8fab;
+color:#fff;
+display:inline-block;
+font-weight:600;
+cursor:pointer;
+}
+
+/* DRAG BOXES */
+.drag-area{
+display:flex;
+gap:12px;
+justify-content:center;
+flex-wrap:wrap;
+margin-top:25px;
+}
+.drag{
+width:110px;
+height:110px;
+border-radius:18px;
+background:#fff;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+box-shadow:0 10px 25px rgba(0,0,0,.15);
+touch-action:none;
+}
+.drag span{font-size:30px}
+
+/* GIFT */
+.gift{
+font-size:60px;
+margin-top:30px;
+display:none;
+animation:pop .6s forwards;
+}
+@keyframes pop{
+0%{transform:scale(.3)}
+100%{transform:scale(1)}
+}
+
+/* TICKET */
+.ticket{
+background:linear-gradient(135deg,#fff3b0,#ffe066);
+border-radius:20px;
+padding:25px;
+box-shadow:0 15px 30px rgba(0,0,0,.2);
+}
+
+/* PHOTO STACK */
+.stack{
+position:relative;
+width:260px;
+height:170px;
+margin:30px auto;
+}
+.photo{
+position:absolute;
+width:100%;
+height:100%;
+border-radius:18px;
+overflow:hidden;
+box-shadow:0 10px 25px rgba(0,0,0,.25);
+}
+.photo img{
+width:100%;
+height:100%;
+object-fit:cover;
+}
+
+/* BOOK */
+.book{
+width:260px;
+height:170px;
+margin:40px auto;
+perspective:800px;
+cursor:pointer;
+}
+.book-inner{
+width:100%;
+height:100%;
+background:#fff7e6;
+border-radius:14px;
+transform-origin:left;
+transition:transform 1s;
+box-shadow:0 20px 40px rgba(0,0,0,.25);
+padding:18px;
+overflow:auto;
+}
+.book.open .book-inner{
+transform:rotateY(-160deg);
+}
+</style>
+</head>
+
+<body>
+
+<!-- PAGE 1 -->
+<div class="page active" id="p1">
+  <div class="card-box">
+    <h3>A little surprise for you</h3>
+    <div class="heart">❤️</div>
+    <div class="tap-btn" onclick="go(2)">Tap</div>
+  </div>
+</div>
+
+<!-- PAGE 2 -->
+<div class="page" id="p2">
+  <h3>Move the little distractions aside</h3>
+  <div class="drag-area">
+    <div class="drag">⛈️<small>Bad Days</small></div>
+    <div class="drag">💼<small>Work</small></div>
+    <div class="drag">🧠<small>Stress</small></div>
+    <div class="drag">📍<small>Distance</small></div>
+  </div>
+  <div class="gift" id="gift" onclick="go(3)">🎁</div>
+</div>
+
+<!-- PAGE 3 -->
+<div class="page" id="p3">
+  <div class="ticket">
+    🎟️<h3>GOLDEN TICKET</h3>
+    <p>Unlimited Love & Smiles</p>
+    <div class="tap-btn" onclick="go(4)">Claim</div>
+  </div>
+</div>
+
+<!-- PAGE 4 -->
+<div class="page" id="p4">
+  <h3>Some moments from this year</h3>
+  <div class="stack" id="stack">
+    <div class="photo"><img src="photo1.jpg"></div>
+    <div class="photo"><img src="photo2.jpg"></div>
+    <div class="photo"><img src="photo3.jpg"></div>
+  </div>
+</div>
+
+<!-- PAGE 5 -->
+<div class="page" id="p5">
+  <h3>Happy New Year 2026 ❤️</h3>
+  <div class="book" onclick="this.classList.toggle('open')">
+    <div class="book-inner">
+      <p>
+      Naya saal sirf calendar badalne ka naam nahi hota...<br><br>
+      2026 mere liye tab khaas hoga jab tumhari muskaan meri har subah ka reason banegi...<br><br>
+      Happy New Year meri jaan 💫
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>
+function go(n){
+document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+document.getElementById('p'+n).classList.add('active');
+if(n===2)document.body.style.background='linear-gradient(135deg,#ffd1dc,#ffe6f0)';
+if(n===3)document.body.style.background='linear-gradient(135deg,#fff1b6,#ffe066)';
+if(n===4)document.body.style.background='linear-gradient(135deg,#dbe7ff,#edf2ff)';
+if(n===5)document.body.style.background='linear-gradient(135deg,#ffe6e6,#fff0f3)';
+}
+
+// drag logic
+let removed=0;
+document.querySelectorAll('.drag').forEach(el=>{
+let startX;
+el.addEventListener('touchstart',e=>startX=e.touches[0].clientX);
+el.addEventListener('touchmove',e=>{
+let dx=e.touches[0].clientX-startX;
+el.style.transform=`translateX(${dx}px)`;
+if(Math.abs(dx)>120){
+el.style.display='none';
+removed++;
+if(removed===4)document.getElementById('gift').style.display='block';
+}
+});
+});
+
+// swipe photos
+document.querySelectorAll('.photo').forEach(p=>{
+let sx;
+p.addEventListener('touchstart',e=>sx=e.touches[0].clientX);
+p.addEventListener('touchmove',e=>{
+let dx=e.touches[0].clientX-sx;
+p.style.transform=`translateX(${dx}px) rotate(${dx/15}deg)`;
+if(Math.abs(dx)>120){
+p.remove();
+if(!document.querySelector('.photo'))go(5);
+}
+});
+});
+</script>
+
+</body>
+</html>
